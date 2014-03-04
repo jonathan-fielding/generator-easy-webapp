@@ -4,7 +4,7 @@
   "description": "Yeoman generator",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "jonathan-fielding/generator-basic-webapp",
+  "repository": "jonathan-fielding/generator-easy-webapp",
   "author": {
     "name": "Jonathan Fielding",
     "email": "",
