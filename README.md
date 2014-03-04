@@ -1,11 +1,12 @@
 # generator-easy-webapp [![Build Status](https://secure.travis-ci.org/jonathan-fielding/generator-easy-webapp.png?branch=master)](https://travis-ci.org/jonathan-fielding/generator-easy-webapp)
 
-> [Yeoman](http://yeoman.io) generator
-
+The Easy Webapp generator is a very simple Yeoman project generator that forgoes having a lot of the additional structure that comes with a lot of Yeoman generators and simply builds you a very basic webapp setup.
 
 ## Getting Started
 
 ### What is Yeoman?
+
+> [Yeoman](http://yeoman.io) generator
 
 Trick question. It's not a thing. It's this guy:
 
