@@ -3,7 +3,8 @@ var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
-
+var util=require('util');
+var exec=require('child_process').exec;
 
 var EasyWebappGenerator = yeoman.generators.Base.extend({
   init: function () {
@@ -30,12 +31,38 @@ var EasyWebappGenerator = yeoman.generators.Base.extend({
       name: 'bootstrap',
       message: 'Would you like to use SASS Bootstrap?',
       default: true
+    },
+    {
+      type: 'confirm',
+      name: 'initGit',
+      message: 'Would you initialise a new Git repo?',
+      default: true
     }];
 
     this.prompt(prompts, function (props) {
-      this.bootstrap = props.bootstrap;
+      var newPrompts = [];
 
-      done();
+      this.bootstrap = props.bootstrap;
+      this.initGit = props.initGit;
+
+      if(this.initGit){
+        newPrompts.push({
+          name: 'gitRepoURL',
+          message: 'What is the URL to repository?',
+          default: ''
+        });
+      }
+
+
+      this.prompt(newPrompts, function (localProps) {
+        if(this.initGit){
+          this.gitRepoURL = localProps.gitRepoURL;
+        }
+
+        done();
+      }.bind(this));
+
+
     }.bind(this));
   },
 
@@ -49,8 +76,9 @@ var EasyWebappGenerator = yeoman.generators.Base.extend({
 
     this.copy('_package.json', 'package.json');
     this.copy('_Gruntfile.js', 'Gruntfile.js');
+    this.copy('gitignore', '.gitignore');
 
-    //Setup the git-hooks, will only setup correctly on a git repo
+    //Setup the git hooks grunt expects
     this.copy('git-hooks/post-merge', 'git-hooks/post-merge');
     this.copy('git-hooks/pre-commit', 'git-hooks/pre-commit');
 
@@ -68,6 +96,26 @@ var EasyWebappGenerator = yeoman.generators.Base.extend({
     else{
       this.copy('_bower_boilerplate.json','bower.json');
       this.copy('sass/boilerplate.scss', 'sass/main.scss');
+    }
+
+    if(this.initGit){
+      
+      exec('git init', function(){
+        //Setup the git-hooks for the new repo
+        this.copy('git-hooks/post-merge', '.git/hooks/post-merge');
+        this.copy('git-hooks/pre-commit', '.git/hooks/pre-commit');
+
+        exec('git add .',function(){
+          exec('git commit -m "initial commit"',function(){
+            if(this.gitRepoURL !== ''){
+              exec('git remote add origin '+this.gitRepoURL, function(){
+                exec('git push -u origin master');
+              }.bind(this));
+            }
+          }.bind(this));
+        }.bind(this));
+      }.bind(this));
+
     }
     
   },
