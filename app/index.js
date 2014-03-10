@@ -82,6 +82,9 @@ var EasyWebappGenerator = yeoman.generators.Base.extend({
     this.copy('git-hooks/post-merge', 'git-hooks/post-merge');
     this.copy('git-hooks/pre-commit', 'git-hooks/pre-commit');
 
+    //Copy basic HTML file
+    this.copy('index.html', 'index.html');
+
     //Copy basic JS file
     this.copy('scripts/main.js', 'scripts/main.js');
 
